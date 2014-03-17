@@ -7,24 +7,30 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 
 import org.lwjgl.input.Keyboard;
 
 import d4rk.mc.ChatColor;
+import d4rk.mc.Config;
 import d4rk.mc.Permission;
 import d4rk.mc.PlayerString;
 import d4rk.mc.event.CommandEvent;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.EventManager;
+import d4rk.mc.event.LoadConfigEvent;
 import d4rk.mc.event.PreSendPacketEvent;
+import d4rk.mc.gui.overlay.EntityChunkCount;
 import d4rk.mc.gui.overlay.OreLevelIndicator;
+import d4rk.mc.gui.overlay.RayTraceInformation;
 
 public class OverlayManager extends BasicGuiScreen implements EventListener {
 	private List<BasicGuiOverlay>[] overlays = new List[3]; 
 	private Minecraft mc = null;
 	private List<GuiButton> textFieldList = new ArrayList();
+	private Item boundItem = Items.stick;
 	
 	public OverlayManager() {
 		instance = this;
@@ -33,7 +39,9 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 		overlays[2] = new ArrayList();
 		mc = Minecraft.getMinecraft();
 		EventManager.registerEvents(this);
-		overlays[RIGHT_BOTTOM].add(new OreLevelIndicator().setVisible(true));
+		overlays[RIGHT_BOTTOM].add(new OreLevelIndicator());
+		overlays[LEFT_TOP].add(new RayTraceInformation());
+		overlays[RIGHT_TOP].add(new EntityChunkCount());
 	}
 	
 	private int getListFromButtonId(int id) {
@@ -158,12 +166,23 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 		return true;
 	}
 	
+	public void onLoadConfig(LoadConfigEvent event) {
+		Config cfg = event.config;
+		cfg.setDefault("openOverlayManagerWithItem", "stick");
+		
+		boundItem = (Item)Item.itemRegistry.getObject(cfg.getString("openOverlayManagerWithItem"));
+	}
+	
 	public void onRightClick(PreSendPacketEvent event) {
 		if(event.getPacket() instanceof C08PacketPlayerBlockPlacement) {
 			C08PacketPlayerBlockPlacement p = (C08PacketPlayerBlockPlacement)event.getPacket();
-			if(p.func_149574_g().getItem().equals(Item.itemRegistry.getObject("stick"))) {
-				mc.displayGuiScreen(this);
-				event.setDisabled(true);
+			try {
+				if(p.func_149574_g().getItem().equals(boundItem)) {
+					mc.displayGuiScreen(this);
+					event.setDisabled(true);
+				}
+			} catch(NullPointerException npe) {
+				// no item held in hand, do nothing
 			}
 		}
 	}
@@ -209,11 +228,11 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 				if(ov == null || !ov.isVisible()) {
 					continue;
 				}
-				glTranslated(width - ov.getWidth(), yValue, 0);
+				glTranslated(width - ov.getWidth() - 8, yValue, 0);
 				mc.mcProfiler.startSection(ov.getName());
 				ov.draw();
 				mc.mcProfiler.endSection();
-				glTranslated(ov.getWidth() - width, -yValue, 0);
+				glTranslated(ov.getWidth() - width + 8, -yValue, 0);
 				yValue += ov.getHeight();
 			}
 		}
@@ -224,11 +243,11 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 				if(ov == null || !ov.isVisible()) {
 					continue;
 				}
-				glTranslated(width - ov.getWidth(), yValue - ov.getHeight(), 0);
+				glTranslated(width - ov.getWidth() - 8, yValue - ov.getHeight() - 8, 0);
 				mc.mcProfiler.startSection(ov.getName());
 				ov.draw();
 				mc.mcProfiler.endSection();
-				glTranslated(ov.getWidth() - width, ov.getHeight() - yValue, 0);
+				glTranslated(ov.getWidth() - width + 8, ov.getHeight() - yValue + 8, 0);
 				yValue -= ov.getHeight();
 			}
 		}
@@ -251,7 +270,7 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 	public static final int RIGHT_TOP = 1;
 	public static final int RIGHT_BOTTOM = 2;
 	
-	public static final int LEFT = 0;
-	public static final int TOP = 1;
-	public static final int BOTTOM = 2;
+	public static final int LEFT = LEFT_TOP;
+	public static final int TOP = RIGHT_TOP;
+	public static final int BOTTOM = RIGHT_BOTTOM;
 }

@@ -24,6 +24,7 @@ public class EventManager {
 		registerEvents(new PMIgnore());
 		registerEvents(new PacketDisplay());
 		registerEvents(new EventSpecifier());
+		registerEvents(BotMC.getInstance());
 	}
 	
 	public static void sendPacketWithoutEvent(Packet packet) {

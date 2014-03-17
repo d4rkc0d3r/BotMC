@@ -1,6 +1,9 @@
 package net.minecraft.client;
 
 import com.google.common.collect.Lists;
+
+import d4rk.mc.event.EventManager;
+import d4rk.mc.event.TickEvent;
 import io.netty.util.concurrent.GenericFutureListener;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -610,7 +613,7 @@ public class Minecraft implements IPlayerUsage
 
         Display.setVSyncEnabled(this.gameSettings.enableVsync);
         
-        new d4rk.mc.BotMC(this);
+        new d4rk.mc.BotMC();
     }
 
     public void refreshResources()
@@ -1644,6 +1647,8 @@ public class Minecraft implements IPlayerUsage
         if (!this.isGamePaused && this.theWorld != null)
         {
             this.playerController.updateController();
+            
+            EventManager.fireEvent(new TickEvent());
         }
 
         this.mcProfiler.endStartSection("textures");

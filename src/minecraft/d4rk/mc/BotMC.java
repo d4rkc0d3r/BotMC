@@ -8,21 +8,28 @@ import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import d4rk.mc.event.EventListener;
 import d4rk.mc.event.EventManager;
+import d4rk.mc.gui.OverlayManager;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 
-public class BotMC {
-	public static Minecraft mc;
+public class BotMC implements EventListener {
+	public static Minecraft mc = Minecraft.getMinecraft();
+	public static final Config cfg = new Config(getBotMCDir() + "/config.cfg");
 	
-	public BotMC(Minecraft mc) {
+	public BotMC() {
 		instance = this;
-		BotMC.mc = mc;
 		File dir = new File(getBotMCDir() + "/log");
 		dir.mkdirs();
 		Permission.init();
 		EventManager.init();
+		
+		// ensure, that there is an instance of the OverlayManager so that the config reload will take effect.
+		OverlayManager.getInstance();
+		
+		cfg.reload();
 	}
 
 	static public String getBotMCDir() {
@@ -87,6 +94,11 @@ public class BotMC {
 
 	public static String getPlayerName() {
 		return mc.getSession().getUsername();
+	}
+
+	@Override
+	public boolean isDestroyed() {
+		return false;
 	}
 	
 	public static BotMC getInstance() {

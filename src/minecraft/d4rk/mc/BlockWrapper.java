@@ -9,6 +9,7 @@ import net.minecraft.block.BlockStone;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.World;
@@ -109,7 +110,7 @@ public class BlockWrapper {
 	public Vec3D getSideOffset(int side) {
 		Vec3D v = new Vec3D(0, 0, 0);
 		Block b = this.getBlock();
-		b = (b == air) ? stone : b;
+		b = (b == null || b.equals(Blocks.air)) ? Blocks.stone : b;
 		
 		double minX = b.getBlockBoundsMinX();
 		double minY = b.getBlockBoundsMinY();
@@ -353,7 +354,7 @@ public class BlockWrapper {
 	}
 
 	public boolean isAir() {
-		return this.getBlock().equals(air);
+		return this.getBlock().equals(Blocks.air);
 	}
 	
 	/**
@@ -365,7 +366,7 @@ public class BlockWrapper {
 	
 	public boolean isReplaceable() {
 		Block b = this.getBlock();
-		if(b == null || b.equals(air)) return true;
+		if(b == null || b.equals(Blocks.air)) return true;
 		if(b.getMaterial().isLiquid()) return true;
 		if(b.getMaterial().isReplaceable()) return true;
 		return false;
@@ -530,8 +531,6 @@ public class BlockWrapper {
 		for(Block candidate : array) if(candidate == reference) return true; return false;
 	}
 	
-	public static Block air = Block.getBlockFromName("air");
-	public static Block stone = Block.getBlockFromName("stone");
 	
 	public static Block[] fenceTypes = new Block[] {
 		Block.getBlockFromName("fence"),

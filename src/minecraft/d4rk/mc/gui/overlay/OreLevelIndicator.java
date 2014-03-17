@@ -12,8 +12,10 @@ import net.minecraft.world.biome.BiomeGenBase;
 
 import org.lwjgl.opengl.GL11;
 
+import d4rk.mc.Config;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.EventManager;
+import d4rk.mc.event.LoadConfigEvent;
 import d4rk.mc.event.PostSendPacketEvent;
 import d4rk.mc.gui.BasicGuiOverlay;
 
@@ -74,8 +76,15 @@ public class OreLevelIndicator extends BasicGuiOverlay implements EventListener 
 			}
 		}
 		
-		width = 16 + 20 * oreList.size();
-		height = 32;
+		width = 8 + 20 * oreList.size();
+		height = 24;
+	}
+	
+	public void onLoadConfig(LoadConfigEvent event) {
+		Config cfg = event.config;
+		cfg.setDefault("isOreLevelIndicatorVisible", true);
+		
+		setVisible(cfg.getBoolean("isOreLevelIndicatorVisible"));
 	}
 	
 	@Override
