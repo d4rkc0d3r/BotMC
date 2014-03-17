@@ -70,7 +70,7 @@ public abstract class Shop {
 	
 	@Override
 	public int hashCode() {
-		return block.hashCode();
+		return toString().hashCode();
 	}
 	
 	@Override
