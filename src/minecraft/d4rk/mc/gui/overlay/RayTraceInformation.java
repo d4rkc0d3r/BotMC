@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
@@ -42,16 +43,25 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 		MovingObjectPosition rayTrace = Minecraft.getMinecraft().objectMouseOver;
 		if(rayTrace.typeOfHit == MovingObjectType.BLOCK) {
 			BlockWrapper block = new BlockWrapper(rayTrace.blockX, rayTrace.blockY, rayTrace.blockZ);
-			displayText.add("Position: " + block);
-			displayText.add("Name: " + (new ItemStack(Item.getItemFromBlock(block.getBlock()), 1, block.getMetadata())).getDisplayName());
+			try {
+				displayText.add("Name: " + (new ItemStack(Item.getItemFromBlock(block.getBlock()), 1, block.getMetadata())).getDisplayName());
+			} catch(NullPointerException npe) {
+				displayText.add("Name: " + block.getBlock().getLocalizedName());
+			}
 			displayText.add("NamedID: " + Block.blockRegistry.getNameForObject(block.getBlock()).replaceFirst("minecraft:", ""));
 			displayText.add("Metadata: " + block.getMetadata());
+			displayText.add("Position: " + block);
 		} else if(rayTrace.typeOfHit == MovingObjectType.ENTITY) {
 			Entity entity = rayTrace.entityHit;
 			displayText.add("Name: " + EntityList.getEntityString(entity));
 			if(entity instanceof EntityLiving) {
 				EntityLiving e = (EntityLiving)entity;
 				displayText.add("Health: " + ((int)e.getHealth()) + "/" + ((int)e.getMaxHealth()));
+				displayText.add("Armor: " + e.getTotalArmorValue());
+				if(entity instanceof EntityAnimal) {
+					EntityAnimal animal = (EntityAnimal)entity;
+					displayText.add("IsInLove: " + animal.isInLove());
+				}
 			}
 		}
 		

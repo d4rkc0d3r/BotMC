@@ -12,6 +12,7 @@ import net.minecraft.network.Packet;
 import d4rk.mc.BotMC;
 import d4rk.mc.chat.PMIgnore;
 import d4rk.mc.debug.PacketDisplay;
+import d4rk.mc.gui.ShopAnalyzer;
 import d4rk.mc.util.Pair;
 
 public class EventManager {
@@ -24,6 +25,7 @@ public class EventManager {
 		registerEvents(new PMIgnore());
 		registerEvents(new PacketDisplay());
 		registerEvents(new EventSpecifier());
+		registerEvents(new ShopAnalyzer());
 		registerEvents(BotMC.getInstance());
 	}
 	

@@ -6,9 +6,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import d4rk.mc.event.EventManager;
 import d4rk.mc.event.LoadConfigEvent;
@@ -16,7 +16,7 @@ import d4rk.mc.event.LoadConfigEvent;
 public class Config {
 	protected String name; 
 
-	protected Map<String, String> data = new HashMap<String, String>();
+	protected Map<String, String> data = new TreeMap<String, String>();
 	
 	public Config(String fileName) {
 		load(fileName);
