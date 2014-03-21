@@ -11,7 +11,7 @@ public class ChatEvent extends DisableEvent {
 	 * This is the event for an ingoing chat message.
 	 */
 	public ChatEvent(String message) {
-		this.srcMessage = message == null ? "" : message;
+		this.srcMessage = (message == null) ? "" : message;
 		this.message = srcMessage;
 	}
 	
@@ -20,5 +20,12 @@ public class ChatEvent extends DisableEvent {
 	 */
 	public String getSrc() {
 		return srcMessage;
+	}
+	
+	/**
+	 * @return true if the unmodified message is different from the actual message.
+	 */
+	public boolean isModified() {
+		return !srcMessage.equals(message);
 	}
 }

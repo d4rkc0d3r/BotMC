@@ -15,18 +15,6 @@ public class Permission {
 		p.put("d4rpl4y3r", ALL); // why not? :D
 	}
 
-	/**
-	 * @deprecated Use the {@link PlayerString} version instead.
-	 */
-	static public boolean has(String player, String rank, int level) {
-		int perm = DEFAULT;
-		if (r.containsKey(rank))
-			perm = r.get(rank);
-		if (p.containsKey(player))
-			perm = p.get(player);
-		return level <= perm;
-	}
-
 	static public boolean has(PlayerString player, int level) {
 		int perm = DEFAULT;
 		if (r.containsKey(player.getRank()))

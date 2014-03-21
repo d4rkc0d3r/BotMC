@@ -21,7 +21,7 @@ public class BotMC implements EventListener {
 	
 	public BotMC() {
 		instance = this;
-		File dir = new File(getBotMCDir() + "/log");
+		File dir = new File(getBotMCDir() + "/log/" + mc.getSession().getUsername());
 		dir.mkdirs();
 		Permission.init();
 		EventManager.init();

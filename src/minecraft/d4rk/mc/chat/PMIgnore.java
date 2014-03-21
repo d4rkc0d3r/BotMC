@@ -24,7 +24,7 @@ public class PMIgnore implements EventListener {
 				if(event.getArg(2).equals("all")) {
 					event.setDisabled(true);
 					if(!event.getSender().hasPermission(Permission.LOCALE)) {
-						event.getSender().sendSilent(ChatColor.RED + "You don't have permission.");
+						event.getSender().sendSilent(Permission.NO_PERMISSION);
 						return;
 					}
 					ignoAll = !ignoAll;
@@ -43,7 +43,7 @@ public class PMIgnore implements EventListener {
 			return;
 		}
 		
-		int index = ignoOnce.indexOf(e.msg);
+		int index = ignoOnce.indexOf(e.message);
 		if (index != -1) {
 			e.setDisabled(true);
 			ignoOnce.remove(index);

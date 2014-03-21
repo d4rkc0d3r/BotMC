@@ -82,9 +82,9 @@ public class OreLevelIndicator extends BasicGuiOverlay implements EventListener 
 	
 	public void onLoadConfig(LoadConfigEvent event) {
 		Config cfg = event.config;
-		cfg.setDefault("isOreLevelIndicatorVisible", true);
+		cfg.setDefault("OreLevelIndicator.isVisible", true);
 		
-		setVisible(cfg.getBoolean("isOreLevelIndicatorVisible"));
+		setVisible(cfg.getBoolean("OreLevelIndicator.isVisible"));
 	}
 	
 	@Override

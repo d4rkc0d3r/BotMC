@@ -34,9 +34,9 @@ public class EntityChunkCount extends BasicGuiOverlay implements EventListener {
 	
 	public void onLoadConfig(LoadConfigEvent event) {
 		Config cfg = event.config;
-		cfg.setDefault("isEntityChunkCountVisible", false);
+		cfg.setDefault("EntityChunkCount.isVisible", false);
 		
-		setVisible(cfg.getBoolean("isEntityChunkCountVisible"));
+		setVisible(cfg.getBoolean("EntityChunkCount.isVisible"));
 	}
 	
 	public void onTick(TickEvent event) {

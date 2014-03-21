@@ -61,14 +61,14 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 	
 	@Override
 	public void initGui() {
-		this.itemNameField = new GuiTextField(fontRendererObj, width / 2 - 160, inputGuiTop, 80, fontRendererObj.FONT_HEIGHT);
+		this.itemNameField = new GuiTextField(fontRendererObj, width / 2 - 160, inputGuiTop, 92, fontRendererObj.FONT_HEIGHT);
         this.itemNameField.setMaxStringLength(20);
         this.itemNameField.setEnableBackgroundDrawing(true);
         this.itemNameField.setVisible(true);
         this.itemNameField.setTextColor(16777215);
         this.itemNameField.setText(itemNameText);
         
-		this.modeField = new GuiTextField(fontRendererObj, width / 2 - 160, inputGuiTop + 30, 80, fontRendererObj.FONT_HEIGHT);
+		this.modeField = new GuiTextField(fontRendererObj, width / 2 - 160, inputGuiTop + 30, 92, fontRendererObj.FONT_HEIGHT);
         this.modeField.setMaxStringLength(20);
         this.modeField.setEnableBackgroundDrawing(true);
         this.modeField.setVisible(true);
@@ -86,9 +86,9 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 	
 	public void onLoadConfig(LoadConfigEvent event) {
 		Config cfg = event.config;
-		cfg.setDefault("openShopAnalyzerItem", "book");
+		cfg.setDefault("ShopAnalyzer.openWithItem", "book");
 		
-		boundItem = (Item)Item.itemRegistry.getObject(cfg.getString("openShopAnalyzerItem"));
+		boundItem = (Item)Item.itemRegistry.getObject(cfg.getString("ShopAnalyzer.openWithItem"));
 	}
 	
 	public void onRightClick(PreSendPacketEvent event) {

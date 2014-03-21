@@ -168,9 +168,9 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 	
 	public void onLoadConfig(LoadConfigEvent event) {
 		Config cfg = event.config;
-		cfg.setDefault("openOverlayManagerWithItem", "stick");
+		cfg.setDefault("OverlayManager.openWithItem", "stick");
 		
-		boundItem = (Item)Item.itemRegistry.getObject(cfg.getString("openOverlayManagerWithItem"));
+		boundItem = (Item)Item.itemRegistry.getObject(cfg.getString("OverlayManager.openWithItem"));
 	}
 	
 	public void onRightClick(PreSendPacketEvent event) {

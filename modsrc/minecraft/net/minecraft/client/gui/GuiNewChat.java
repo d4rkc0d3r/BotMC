@@ -1,12 +1,22 @@
 package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
+
+import d4rk.mc.ChatColor;
+import d4rk.mc.event.ChatEvent;
+import d4rk.mc.event.EventManager;
+import d4rk.mc.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
@@ -141,7 +151,28 @@ public class GuiNewChat extends Gui
 
     public void func_146234_a(IChatComponent p_146234_1_, int p_146234_2_)
     {
-        this.func_146237_a(p_146234_1_, p_146234_2_, this.field_146247_f.ingameGUI.getUpdateCounter(), false);
+		ChatEvent event = new ChatEvent(p_146234_1_.getFormattedText());
+    	if(EventManager.fireEvent(event)) {
+    		return;
+    	}
+    	p_146234_1_ = (event.isModified()) ? new ChatComponentText(event.message) : p_146234_1_;
+    	if(addToChatContent(p_146234_1_)) {
+    		field_146253_i.clear();
+    		field_146252_h.clear();
+    		for(Pair<IChatComponent, Pair<Integer, Integer>> p : chatContent) {
+    			IChatComponent icc = p.getFirst();
+    			if(p.getSecond().getFirst() > 1) {
+        			StringBuilder sb = new StringBuilder();
+        			sb.append(p.getFirst().getFormattedText());
+    				sb.append(" ").append(ChatColor.RED).append("[x");
+    				sb.append(p.getSecond().getFirst()).append("]");
+    				icc = new ChatComponentText(sb.toString());
+    			}
+    			this.func_146237_a(icc, 0, p.getSecond().getSecond(), false);
+    		}
+    	} else {
+    		this.func_146237_a(p_146234_1_, p_146234_2_, this.field_146247_f.ingameGUI.getUpdateCounter(), false);
+    	}
         logger.info("[CHAT] " + p_146234_1_.getUnformattedText());
     }
 
@@ -231,7 +262,7 @@ public class GuiNewChat extends Gui
             }
         }
 
-        while (this.field_146253_i.size() > 100)
+        while (this.field_146253_i.size() > chatLines)
         {
             this.field_146253_i.remove(this.field_146253_i.size() - 1);
         }
@@ -240,7 +271,7 @@ public class GuiNewChat extends Gui
         {
             this.field_146252_h.add(0, new ChatLine(p_146237_3_, p_146237_1_, p_146237_2_));
 
-            while (this.field_146252_h.size() > 100)
+            while (this.field_146252_h.size() > chatLines)
             {
                 this.field_146252_h.remove(this.field_146252_h.size() - 1);
             }
@@ -428,4 +459,30 @@ public class GuiNewChat extends Gui
     }
 
 	public static boolean antispam = true;
+	private static int chatLines = 300;
+	// first integer is the count, second is the original update counter
+	private LinkedList<Pair<IChatComponent, Pair<Integer, Integer>>> chatContent = new LinkedList();
+	
+	/**
+	 * Returns <code>true</code> if the chat needs to be rebuild.
+	 */
+	private boolean addToChatContent(IChatComponent icc) {
+		if(antispam && chatContent.size() > 0) {
+			Iterator<Pair<IChatComponent, Pair<Integer, Integer>>> iter = chatContent.descendingIterator();
+			for(int i = 0; i < 5 && iter.hasNext(); ++i) {
+				Pair<IChatComponent,Pair<Integer,Integer>> p = iter.next();
+				if(p.getFirst().getFormattedText().equals(icc.getFormattedText())) {
+					iter.remove();
+					chatContent.addLast(new Pair(p.getFirst(), new Pair(p.getSecond().getFirst() + 1,
+							this.field_146247_f.ingameGUI.getUpdateCounter())));
+					return true;
+				}
+			}
+		}
+		chatContent.addLast(new Pair(icc, new Pair(1, this.field_146247_f.ingameGUI.getUpdateCounter())));
+		while(chatContent.size() > chatLines) {
+			chatContent.removeFirst();
+		}
+		return false;
+	}
 }
