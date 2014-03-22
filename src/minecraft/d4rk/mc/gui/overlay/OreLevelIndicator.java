@@ -58,7 +58,7 @@ public class OreLevelIndicator extends BasicGuiOverlay implements EventListener 
 				oreList.add(quarz);
 			}
 		} else {
-			if(mc.thePlayer.posY <= 30 && (biome == BiomeGenBase.extremeHills || biome == BiomeGenBase.extremeHills.extremeHillsEdge)) {
+			if(mc.thePlayer.posY <= 30 && (biome.biomeName.contains("Extreme Hills"))) {
 				oreList.add(emerald);
 			}
 			if(mc.thePlayer.posY <= 15) {
