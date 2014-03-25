@@ -28,10 +28,8 @@ public class EventSpecifier implements EventListener {
 	
 	public void onSendChatMessage(SendChatMessageEvent event) {
 		if(event.getMessage().startsWith("/")) {
-			System.out.println("Send Command?: " + event.getMessage());
 			CommandEvent e = new CommandEvent(event.getMessage().substring(1).split(" "), PlayerString.ME);
-			EventManager.fireEvent(e);
-			event.setDisabled(e.isDisabled());
+			event.setDisabled(EventManager.fireEvent(e) || event.isDisabled());
 		}
 	}
 	
@@ -48,7 +46,7 @@ public class EventSpecifier implements EventListener {
 					String s = str;
 					String player = s.substring(s.indexOf(']') + 1, s.indexOf(':'));
 					String rank = s.substring(1, s.indexOf(']'));
-					int index2 = strColor.indexOf(": " + ChatColor.YELLOW) + 4;
+					int index2 = strColor.indexOf(": " + ChatColor.RESET + ChatColor.YELLOW) + 6;
 					GlobalMessageEvent gmEvent = new GlobalMessageEvent(new PlayerString(player, rank), strColor.substring(index2));
 					//System.out.println("  ==> GlobalMessageEvent: " + gmEvent);
 					EventManager.fireEvent(gmEvent);
@@ -60,13 +58,13 @@ public class EventSpecifier implements EventListener {
 					String rank = s.substring(1, s.indexOf(']'));
 					int index2 = strColor.indexOf(": ") + 2;
 					String message = strColor.substring(index2);
-					boolean hasColorCode = message.startsWith("" + ChatColor.WHITE);
-					message = message.substring((hasColorCode) ? 2 : 0);
+					boolean hasColorCode = message.startsWith("" + ChatColor.RESET + ChatColor.WHITE);
+					message = message.substring((hasColorCode) ? 4 : 0);
 					LocaleMessageEvent lmEvent = new LocaleMessageEvent(new PlayerString(player, rank), message);
 					//System.out.println("  ==> LocaleMessageEvent: " + lmEvent);
 					EventManager.fireEvent(lmEvent);
 					event.setDisabled(lmEvent.isDisabled() || event.isDisabled());
-					event.message = strColor.substring(0, index2) + ((hasColorCode) ? ChatColor.WHITE : "") + lmEvent.message;
+					event.message = strColor.substring(0, index2) + ((hasColorCode) ? "" + ChatColor.RESET + ChatColor.WHITE : "") + lmEvent.message;
 				}
 			} else if(privateMessagePattern.matcher(str).lookingAt()) {
 				String[] user = str.substring(1, str.indexOf("] ")).split(" -> ", 2);
@@ -92,7 +90,7 @@ public class EventSpecifier implements EventListener {
 	}
 	
 	private static Pattern firstGlobalLocalPattern = Pattern.compile("^\\[[a-zA-Z1-9_+]+\\][a-zA-Z1-9_]+(<3)*: ");
-	private static Pattern globalPattern = Pattern.compile("^.*: \\u00a7e");
+	private static Pattern globalPattern = Pattern.compile("^.*: \\u00a7r\\u00a7e");
 	private static Pattern privateMessagePattern = Pattern.compile(
 			"^\\[(mir -> \\[[a-zA-Z1-9_+]+\\][a-zA-Z1-9_]+(<3)*|\\[[a-zA-Z1-9_+]+\\][a-zA-Z1-9_]+(<3)* -> mir)\\] ");
 }

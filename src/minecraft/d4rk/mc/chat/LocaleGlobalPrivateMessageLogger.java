@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import d4rk.mc.BotMC;
+import d4rk.mc.ChatColor;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.GlobalMessageEvent;
 import d4rk.mc.event.LocaleMessageEvent;
@@ -29,6 +30,7 @@ public class LocaleGlobalPrivateMessageLogger  implements EventListener {
 	}
 	
 	private void log(String toLog, String logFileName) {
+		toLog = ChatColor.stripColor(toLog);
 		try {
 			Writer output = new BufferedWriter(new FileWriter(
 					BotMC.getBotMCDir() + "/log/" + BotMC.getPlayerName() + "/" + logFileName + ".log", true));

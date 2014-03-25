@@ -13,6 +13,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityEnchantmentTable;
+import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
@@ -62,6 +65,13 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 			displayText.add("NamedID: " + Block.blockRegistry.getNameForObject(block.getBlock()).replaceFirst("minecraft:", ""));
 			displayText.add("Metadata: " + block.getMetadata());
 			displayText.add("Position: " + block);
+			TileEntity te = block.getTileEntity();
+			if(te instanceof TileEntitySkull) {
+				TileEntitySkull skull = (TileEntitySkull) te;
+				if(!skull.func_145907_c().isEmpty()) {
+					displayText.add("SkullOwner: " + skull.func_145907_c());
+				}
+			}
 		} else if(rayTrace.typeOfHit == MovingObjectType.ENTITY) {
 			Entity entity = rayTrace.entityHit;
 			if(entity instanceof EntityPlayer) {
