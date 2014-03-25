@@ -39,8 +39,8 @@ public class EventSpecifier implements EventListener {
 		String strColor = event.message;
 		String str = ChatColor.stripColor(strColor);
 		try {
-			if(firstGlobalLocalPattern.matcher(str).matches()) {
-				if(globalPattern.matcher(strColor).matches()) {
+			if(firstGlobalLocalPattern.matcher(str).lookingAt()) {
+				if(globalPattern.matcher(strColor).lookingAt()) {
 					int strIndexOfDoubbleDot = str.indexOf(": ");
 					String s = str.substring(0, strIndexOfDoubbleDot).replaceAll("<3", "") + str.substring(strIndexOfDoubbleDot);
 					String player = s.substring(s.indexOf(']') + 1, s.indexOf(':'));
@@ -59,7 +59,7 @@ public class EventSpecifier implements EventListener {
 					event.setDisabled(EventManager.fireEvent(lmEvent) || event.isDisabled());
 					event.message = strColor.substring(0, index2) + lmEvent.message;
 				}
-			} else if(privateMessagePattern.matcher(str).matches()) {
+			} else if(privateMessagePattern.matcher(str).lookingAt()) {
 				String[] user = str.substring(1, str.indexOf("] ")).split(" -> ", 2);
 				int index2 = strColor.indexOf("] " + ChatColor.WHITE);
 				PrivateMessageEvent pmEvent = new PrivateMessageEvent(strColor.substring(index2 + 4),
@@ -77,8 +77,8 @@ public class EventSpecifier implements EventListener {
 		return false;
 	}
 	
-	private static Pattern firstGlobalLocalPattern = Pattern.compile("^\\[[a-zA-Z1-9_+]+\\](<3)*[a-zA-Z1-9_]+: ");
-	private static Pattern globalPattern = Pattern.compile(": " + ChatColor.COLOR_CHAR + "e");
-	private static Pattern privateMessagePattern = Pattern.compile(
-			"^\\[(mir -> [a-zA-Z1-9_+]+\\](<3)*[a-zA-Z1-9_]+|[a-zA-Z1-9_+]+\\](<3)*[a-zA-Z1-9_]+ -> mir)\\] ");
+	public static Pattern firstGlobalLocalPattern = Pattern.compile("^\\[[a-zA-Z1-9_+]+\\][a-zA-Z1-9_]+(<3)*: ");
+	public static Pattern globalPattern = Pattern.compile(".*: " + ChatColor.COLOR_CHAR + "e");
+	public static Pattern privateMessagePattern = Pattern.compile(
+			"^\\[(mir -> [a-zA-Z1-9_+]+\\][a-zA-Z1-9_]+(<3)*|[a-zA-Z1-9_+]+\\][a-zA-Z1-9_]+(<3)* -> mir)\\] ");
 }
