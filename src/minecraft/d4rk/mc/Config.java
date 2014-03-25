@@ -12,11 +12,12 @@ import java.util.TreeMap;
 
 import d4rk.mc.event.EventManager;
 import d4rk.mc.event.LoadConfigEvent;
+import d4rk.mc.util.Pair;
 
 public class Config {
 	protected String name; 
 
-	protected Map<String, String> data = new TreeMap<String, String>();
+	protected Map<String, Pair<String, String>> data = new TreeMap();
 	
 	public Config(String fileName) {
 		load(fileName);
@@ -42,10 +43,17 @@ public class Config {
 		try {
 			file = new BufferedReader(new FileReader(oFile));
 			String line = "";
+			String lastComment = "";
 			while ((line = file.readLine()) != null) {
+				if(line.startsWith("#")) {
+					lastComment = line.substring(1);
+					continue;
+				}
 				String[] str = line.split(":", 2);
-				if(str.length <= 1) continue;
-				data.put(str[0].trim(), str[1].trim());
+				if(str.length == 2) {
+					data.put(str[0].trim(), new Pair(str[1].trim(), lastComment));
+				}
+				lastComment = "";
 	        }
 			file.close();
 		} catch (FileNotFoundException fnfe) {
@@ -73,8 +81,11 @@ public class Config {
 		BufferedWriter file = null;
 		try {
 			file = new BufferedWriter(new FileWriter(oFile));
-			for(Entry<String, String> entry : data.entrySet()) {
-				file.write(entry.getKey() + ":" + entry.getValue() + "\n");
+			for(Entry<String, Pair<String, String>> entry : data.entrySet()) {
+				if(!entry.getValue().getSecond().isEmpty()) {
+					file.write("\n#" + entry.getValue().getSecond() + "\n");
+				}
+				file.write(entry.getKey() + ":" + entry.getValue().getFirst() + "\n");
 			}
 			file.close();
 		} catch (Exception e) {
@@ -87,17 +98,34 @@ public class Config {
 	}
 	
 	public void set(String key, Object value) {
-		data.put(key, String.valueOf(value));
+		this.set(key, value, "");
+	}
+	
+	public void set(String key, Object value, String comment) {
+		data.put(key, new Pair(String.valueOf(value), (comment == null) ? "" : comment));
+	}
+	
+	public void setComment(String key, String comment) {
+		this.set(key, getString(key), comment);
 	}
 	
 	public void setDefault(String key, Object value) {
+		this.setDefault(key, value, "");
+	}
+	
+	public void setDefault(String key, Object value, String comment) {
 		if(!data.containsKey(key))
-			data.put(key, String.valueOf(value));
+			this.set(key, value, comment);
+	}
+	
+	public void setDefaultComment(String key, String comment) {
+		if(data.containsKey(key) && data.get(key).getSecond().isEmpty())
+			this.setComment(key, comment);
 	}
 	
 	public int getInteger(String key) {
 		try {
-			return Integer.valueOf(data.get(key));
+			return Integer.valueOf(data.get(key).getFirst());
 		} catch(Exception e) {
 			return 0;
 		}
@@ -105,7 +133,7 @@ public class Config {
 	
 	public float getFloat(String key) {
 		try {
-			return Float.valueOf(data.get(key));
+			return Float.valueOf(data.get(key).getFirst());
 		} catch(Exception e) {
 			return 0;
 		}
@@ -113,7 +141,7 @@ public class Config {
 	
 	public double getDouble(String key) {
 		try {
-			return Double.valueOf(data.get(key));
+			return Double.valueOf(data.get(key).getFirst());
 		} catch(Exception e) {
 			return 0;
 		}
@@ -121,14 +149,27 @@ public class Config {
 	
 	public boolean getBoolean(String key) {
 		try {
-			return Boolean.valueOf(data.get(key));
+			return Boolean.valueOf(data.get(key).getFirst());
 		} catch(Exception e) {
 			return false;
 		}
 	}
 	
 	public String getString(String key) {
-		String val = data.get(key);
-		return (val == null) ? "" : val;
+		try {
+			String val = data.get(key).getFirst();
+			return (val == null) ? "" : val;
+		} catch(Exception e) {
+			return "";
+		}
+	}
+	
+	public String getComment(String key) {
+		try {
+			String val = data.get(key).getSecond();
+			return (val == null) ? "" : val;
+		} catch(Exception e) {
+			return "";
+		}
 	}
 }

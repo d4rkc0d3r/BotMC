@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -69,7 +70,7 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 			if(te instanceof TileEntitySkull) {
 				TileEntitySkull skull = (TileEntitySkull) te;
 				if(!skull.func_145907_c().isEmpty()) {
-					displayText.add("SkullOwner: " + skull.func_145907_c());
+					displayText.add(" SkullOwner: " + skull.func_145907_c());
 				}
 			}
 		} else if(rayTrace.typeOfHit == MovingObjectType.ENTITY) {
@@ -86,6 +87,14 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 				if(entity instanceof EntityAnimal) {
 					EntityAnimal animal = (EntityAnimal)entity;
 					displayText.add("IsInLove: " + animal.isInLove());
+				}
+			} else if(entity instanceof EntityItemFrame) {
+				EntityItemFrame frame = (EntityItemFrame)entity;
+				ItemStack i = frame.getDisplayedItem();
+				if(i != null) {
+					displayText.add(" ItemName: " + i.getDisplayName());
+					displayText.add(" ItemID: " + Item.itemRegistry.getNameForObject(i.getItem()).replace("minecraft:", "")
+													  + ((i.getHasSubtypes()) ? ":" + i.getItemDamage() : ""));
 				}
 			}
 		}
