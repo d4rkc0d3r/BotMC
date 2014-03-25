@@ -91,7 +91,7 @@ public class EventManager {
 	public static boolean registerMethod(EventListener listener, Method m) {
 		Class<?>[] params = m.getParameterTypes();
 		if (params.length != 1 || params[0].getName().startsWith("[")
-				|| !isSubClassOf(params[0], BaseEvent.class)) {
+				|| !isSuperClassOf(params[0], BaseEvent.class)) {
 			return false;
 		}
 	
@@ -108,7 +108,7 @@ public class EventManager {
 		return true;
 	}
 
-	private static boolean isSubClassOf(Class check, Class sup) {
+	private static boolean isSuperClassOf(Class check, Class sup) {
 		Class sup2 = check;
 		while (!sup.equals(sup2)) {
 			sup2 = sup2.getSuperclass();

@@ -16,16 +16,16 @@ public class LocaleGlobalPrivateMessageLogger  implements EventListener {
 		
 	}
 	
-	private void onPMEvent(PrivateMessageEvent event) {
+	public void onPMEvent(PrivateMessageEvent event) {
 		log(event.toString(), (event.sender.toString().equals("mir")) ? event.receiver.getName() : event.sender.getName());
 	}
 	
-	private void onLMEvent(LocaleMessageEvent event) {
-		log(event.message, "locale");
+	public void onLMEvent(LocaleMessageEvent event) {
+		log(event.toString(), "locale");
 	}
 	
-	private void onGMEvent(GlobalMessageEvent event) {
-		log(event.message, "global");
+	public void onGMEvent(GlobalMessageEvent event) {
+		log(event.toString(), "global");
 	}
 	
 	private void log(String toLog, String logFileName) {
