@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import d4rk.mc.BotMC;
+import d4rk.mc.ChatColor;
 import d4rk.mc.Config;
 import d4rk.mc.event.ChatEvent;
 import d4rk.mc.event.EventListener;
@@ -26,9 +27,12 @@ public class ChatRegexIgnore implements EventListener {
 	}
 	
 	public void onChatEvent(ChatEvent event) {
+		String unformattedText = ChatColor.stripColor(event.getSrc());
 		for(int i = 0; i < ignoreOnMatch.size(); ++i) {
-			if(ignoreOnMatch.get(i).matcher(event.getSrc()).matches()) {
+			if(ignoreOnMatch.get(i).matcher(unformattedText).matches()) {
 				event.setDisabled(true);
+				BotMC.logToFile("[ChatRegexIgnored] " + "Pattern " + ignoreOnMatch.get(i) + " detected:");
+				BotMC.logToFile("[ChatRegexIgnored] " + unformattedText);
 				break;
 			}
 		}
