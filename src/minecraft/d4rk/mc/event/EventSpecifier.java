@@ -89,8 +89,8 @@ public class EventSpecifier implements EventListener {
 		return false;
 	}
 	
-	private static Pattern firstGlobalLocalPattern = Pattern.compile("^\\[[a-zA-Z0-9_+]+\\][a-zA-Z0-9_]+(<3)*: ");
+	private static Pattern firstGlobalLocalPattern = Pattern.compile("^\\[[a-zA-Z0-9_+\\-]+\\][a-zA-Z0-9_]+(<3)*: ");
 	private static Pattern globalPattern = Pattern.compile("^.*: \\u00a7r\\u00a7e");
 	private static Pattern privateMessagePattern = Pattern.compile(
-			"^\\[(mir -> \\[[a-zA-Z0-9_+]+\\][a-zA-Z0-9_]+(<3)*|\\[[a-zA-Z0-9_+]+\\][a-zA-Z0-9_]+(<3)* -> mir)\\] ");
+			"^\\[(mir -> \\[[a-zA-Z0-9_+\\-]+\\][a-zA-Z0-9_]+(<3)*|\\[[a-zA-Z0-9_+\\-]+\\][a-zA-Z0-9_]+(<3)* -> mir)\\] ");
 }
