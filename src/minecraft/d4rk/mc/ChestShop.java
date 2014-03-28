@@ -21,11 +21,15 @@ public class ChestShop extends Shop {
 		shop.itemName = block.getSignLine(3);
 		
 		String str = block.getSignLine(2);
-		shop.isBuy = str.startsWith("B");
+		shop.isBuy = str.contains("B");
 		shop.isSell = str.contains("S");
 		if(str.startsWith("S")) {
 			try {
-				shop.priceSell = Double.valueOf(str.substring(1).trim());
+				String[] split = str.substring(1).split(":");
+				shop.priceSell = Double.valueOf(split[0].substring(1).trim());
+				if(split.length > 1) {
+					shop.priceBuy = Double.valueOf(split[1].replace("B", "").trim());
+				}
 			} catch(NumberFormatException e) {
 				return null;
 			}

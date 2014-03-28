@@ -16,11 +16,18 @@ import d4rk.mc.util.Pair;
 
 public class Config {
 	protected String name; 
-
 	protected Map<String, Pair<String, String>> data = new TreeMap();
 	
 	public Config(String fileName) {
 		load(fileName);
+	}
+	
+	public String getFileName() {
+		return name;
+	}
+	
+	public boolean exists() {
+		return (new File(name)).exists();
 	}
 	
 	/**

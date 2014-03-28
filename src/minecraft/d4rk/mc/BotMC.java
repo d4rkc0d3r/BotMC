@@ -88,7 +88,7 @@ public class BotMC implements EventListener {
 	}
 
 	public static void addToChatGui(String msg) {
-		mc.thePlayer.addChatMessage(new ChatComponentText(msg));
+		mc.ingameGUI.getChatGUI().func_146227_a(new ChatComponentText(msg));
 	}
 
 	public static String getPlayerName() {

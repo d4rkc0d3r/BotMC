@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.Packet;
 
 import d4rk.mc.BotMC;
+import d4rk.mc.chat.ChatRegexIgnore;
 import d4rk.mc.chat.LocaleGlobalPrivateMessageLogger;
 import d4rk.mc.chat.PMIgnore;
 import d4rk.mc.debug.PacketDisplay;
@@ -28,6 +29,7 @@ public class EventManager {
 		registerEvents(new EventSpecifier());
 		registerEvents(new ShopAnalyzer());
 		registerEvents(new LocaleGlobalPrivateMessageLogger());
+		registerEvents(new ChatRegexIgnore());
 		registerEvents(BotMC.getInstance());
 	}
 	
