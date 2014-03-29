@@ -30,6 +30,18 @@ import d4rk.mc.gui.BasicGuiOverlay;
 
 public class RayTraceInformation extends BasicGuiOverlay implements EventListener {
 	private ArrayList<String> displayText;
+
+	private boolean displayBlockName = true;
+	private boolean displayBlockNamedID = true;
+	private boolean displayBlockMetadata = true;
+	private boolean displayBlockPosition = true;
+	private boolean displayBlockSubInfo = true;
+	
+	private boolean displayEntityName = true;
+	private boolean displayEntityHealth = true;
+	private boolean displayEntityArmor = true;
+	private boolean displayEntityIsInLove = true;
+	private boolean displayEntitySubInfo = true;
 	
 	public RayTraceInformation() {
 		displayText = new ArrayList();
@@ -41,7 +53,32 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 		Config cfg = event.config;
 		cfg.setDefault("RayTraceInformation.isVisible", false);
 		
+		cfg.setDefault("RayTraceInformation.displayBlockName", true);
+		cfg.setDefault("RayTraceInformation.displayBlockNamedID", true);
+		cfg.setDefault("RayTraceInformation.displayBlockMetadata", true);
+		cfg.setDefault("RayTraceInformation.displayBlockPosition", true);
+		cfg.setDefault("RayTraceInformation.displayBlockSubInfo", true);
+		
+		cfg.setDefault("RayTraceInformation.displayEntityName", true);
+		cfg.setDefault("RayTraceInformation.displayEntityHealth", true);
+		cfg.setDefault("RayTraceInformation.displayEntityArmor", true);
+		cfg.setDefault("RayTraceInformation.displayEntityIsInLove", true);
+		cfg.setDefault("RayTraceInformation.displayEntitySubInfo", true);
+		
+		
 		setVisible(cfg.getBoolean("RayTraceInformation.isVisible"));
+		
+		displayBlockName = cfg.getBoolean("RayTraceInformation.displayBlockName");
+		displayBlockNamedID = cfg.getBoolean("RayTraceInformation.displayBlockNamedID");
+		displayBlockMetadata = cfg.getBoolean("RayTraceInformation.displayBlockMetadata");
+		displayBlockPosition = cfg.getBoolean("RayTraceInformation.displayBlockPosition");
+		displayBlockSubInfo = cfg.getBoolean("RayTraceInformation.displayBlockSubInfo");
+		
+		displayEntityName = cfg.getBoolean("RayTraceInformation.displayEntityName");
+		displayEntityHealth = cfg.getBoolean("RayTraceInformation.displayEntityHealth");
+		displayEntityArmor = cfg.getBoolean("RayTraceInformation.displayEntityArmor");
+		displayEntityIsInLove = cfg.getBoolean("RayTraceInformation.displayEntityIsInLove");
+		displayEntitySubInfo = cfg.getBoolean("RayTraceInformation.displayEntitySubInfo");
 	}
 	
 	public void onTick(TickEvent event) {
@@ -62,12 +99,12 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 			} catch(NullPointerException npe) {
 				name = block.getBlock().getLocalizedName();
 			}
-			displayText.add("Name: " + name);
-			displayText.add("NamedID: " + Block.blockRegistry.getNameForObject(block.getBlock()).replaceFirst("minecraft:", ""));
-			displayText.add("Metadata: " + block.getMetadata());
-			displayText.add("Position: " + block);
+			if(displayBlockName) displayText.add("Name: " + name);
+			if(displayBlockNamedID) displayText.add("NamedID: " + Block.blockRegistry.getNameForObject(block.getBlock()).replaceFirst("minecraft:", ""));
+			if(displayBlockMetadata) displayText.add("Metadata: " + block.getMetadata());
+			if(displayBlockPosition) displayText.add("Position: " + block);
 			TileEntity te = block.getTileEntity();
-			if(te instanceof TileEntitySkull) {
+			if(te instanceof TileEntitySkull && displayBlockSubInfo) {
 				TileEntitySkull skull = (TileEntitySkull) te;
 				if(!skull.func_145907_c().isEmpty()) {
 					displayText.add(" SkullOwner: " + skull.func_145907_c());
@@ -75,20 +112,20 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 			}
 		} else if(rayTrace.typeOfHit == MovingObjectType.ENTITY) {
 			Entity entity = rayTrace.entityHit;
-			if(entity instanceof EntityPlayer) {
+			if(entity instanceof EntityPlayer && displayEntityName) {
 				displayText.add("Name: " + ((EntityPlayer)entity).getGameProfile().getName());
-			} else {
+			} else if(displayEntityName) {
 				displayText.add("Name: " + EntityList.getEntityString(entity));
 			}
 			if(entity instanceof EntityLivingBase) {
 				EntityLivingBase e = (EntityLivingBase)entity;
-				displayText.add("Health: " + ((int)e.getHealth()) + "/" + ((int)e.getMaxHealth()));
-				displayText.add("Armor: " + e.getTotalArmorValue());
-				if(entity instanceof EntityAnimal) {
+				if(displayEntityHealth) displayText.add("Health: " + ((int)e.getHealth()) + "/" + ((int)e.getMaxHealth()));
+				if(displayEntityArmor) displayText.add("Armor: " + e.getTotalArmorValue());
+				if(entity instanceof EntityAnimal && displayEntityIsInLove) {
 					EntityAnimal animal = (EntityAnimal)entity;
 					displayText.add("IsInLove: " + animal.isInLove());
 				}
-			} else if(entity instanceof EntityItemFrame) {
+			} else if(entity instanceof EntityItemFrame && displayEntitySubInfo) {
 				EntityItemFrame frame = (EntityItemFrame)entity;
 				ItemStack i = frame.getDisplayedItem();
 				if(i != null) {
@@ -104,7 +141,7 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 			width = Math.max(width, fontRenderer.getStringWidth(s));
 		}
 		width += 8;
-		height = (fontRenderer.FONT_HEIGHT + 3) * displayText.size() + 3;
+		height = (displayText.size() == 0) ? 0 : (fontRenderer.FONT_HEIGHT + 3) * displayText.size() + 3;
 	}
 
 	@Override
