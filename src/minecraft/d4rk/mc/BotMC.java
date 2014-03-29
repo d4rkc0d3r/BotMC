@@ -17,7 +17,7 @@ import net.minecraft.util.ChatComponentText;
 
 public class BotMC implements EventListener {
 	public static Minecraft mc = Minecraft.getMinecraft();
-	public static final Config cfg = new Config(getBotMCDir() + "/config.cfg");
+	public static Config cfg;
 	
 	public BotMC() {
 		instance = this;
@@ -27,6 +27,8 @@ public class BotMC implements EventListener {
 		
 		// ensure, that there is an instance of the OverlayManager so that the config reload will take effect.
 		OverlayManager.getInstance();
+		
+		cfg = new ConfigManager(getBotMCDir() + "/config.cfg");
 		
 		cfg.reload();
 	}

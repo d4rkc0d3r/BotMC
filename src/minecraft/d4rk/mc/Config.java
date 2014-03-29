@@ -15,11 +15,16 @@ import d4rk.mc.event.LoadConfigEvent;
 import d4rk.mc.util.Pair;
 
 public class Config {
-	protected String name; 
+	private final String name; 
+	
+	/**
+	 * key, Pair(data, comment)
+	 */
 	protected Map<String, Pair<String, String>> data = new TreeMap();
 	
 	public Config(String fileName) {
-		load(fileName);
+		name = fileName;
+		load();
 	}
 	
 	public String getFileName() {
@@ -40,12 +45,7 @@ public class Config {
 	}
 	
 	public void load() {
-		load(name);
-	}
-	
-	protected void load(String fileName) {
-		name = fileName;
-		File oFile = new File(fileName);
+		File oFile = new File(name);
 		BufferedReader file = null;
 		try {
 			file = new BufferedReader(new FileReader(oFile));
@@ -79,18 +79,13 @@ public class Config {
 	}
 	
 	public void save() {
-		save(name);
-	}
-	
-	protected void save(String fileName) {
-		name = fileName;
-		File oFile = new File(fileName);
+		File oFile = new File(name);
 		BufferedWriter file = null;
 		try {
 			file = new BufferedWriter(new FileWriter(oFile));
 			for(Entry<String, Pair<String, String>> entry : data.entrySet()) {
 				if(!entry.getValue().getSecond().isEmpty()) {
-					file.write("\n#" + entry.getValue().getSecond() + "\n");
+					file.write("#" + entry.getValue().getSecond() + "\n");
 				}
 				file.write(entry.getKey() + ":" + entry.getValue().getFirst() + "\n");
 			}

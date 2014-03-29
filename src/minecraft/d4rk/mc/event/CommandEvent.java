@@ -12,6 +12,10 @@ public class CommandEvent extends DisableEvent {
 		this.sender = sender;
 	}
 	
+	
+	/**
+	 * 0 is the command, the arguments start with index 1.
+	 */
 	public String getArg(int i) {
 		try {
 			return args[i];
