@@ -42,8 +42,7 @@ public class BotMC implements EventListener {
 	}
 	
 	static public String getCurrentDateAndTime() {
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd-hh:mm:ss");
-	    return sdf.format(Calendar.getInstance().getTime());
+	    return (new SimpleDateFormat("yyyy.MM.dd-hh:mm:ss")).format(Calendar.getInstance().getTime());
 	}
 	
 	/**

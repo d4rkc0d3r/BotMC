@@ -16,6 +16,7 @@ import d4rk.mc.util.Pair;
 
 public class Config {
 	private final String name; 
+	private String section = "";
 	
 	/**
 	 * key, Pair(data, comment)
@@ -33,6 +34,22 @@ public class Config {
 	
 	public boolean exists() {
 		return (new File(name)).exists();
+	}
+	
+	public Config startSection(String sectionName) {
+		section = section + sectionName + ".";
+		return this;
+	}
+	
+	public Config endSection() {
+		int firstDot = section.indexOf('.');
+		int lastDot = section.lastIndexOf('.');
+		section = (firstDot == lastDot) ? "" : section.replace("\\.[^\\.]+\\.", ".");
+		return this;
+	}
+	
+	public String getSection() {
+		return section;
 	}
 	
 	/**
@@ -104,7 +121,7 @@ public class Config {
 	}
 	
 	public void set(String key, Object value, String comment) {
-		data.put(key, new Pair(String.valueOf(value), (comment == null) ? "" : comment));
+		data.put(section + key, new Pair(String.valueOf(value), (comment == null) ? "" : comment));
 	}
 	
 	public void setComment(String key, String comment) {
@@ -116,18 +133,18 @@ public class Config {
 	}
 	
 	public void setDefault(String key, Object value, String comment) {
-		if(!data.containsKey(key))
+		if(!data.containsKey(section + key))
 			this.set(key, value, comment);
 	}
 	
 	public void setDefaultComment(String key, String comment) {
-		if(data.containsKey(key) && data.get(key).getSecond().isEmpty())
+		if(data.containsKey(section + key) && data.get(section + key).getSecond().isEmpty())
 			this.setComment(key, comment);
 	}
 	
 	public int getInteger(String key) {
 		try {
-			return Integer.valueOf(data.get(key).getFirst());
+			return Integer.valueOf(getString(key));
 		} catch(Exception e) {
 			return 0;
 		}
@@ -135,7 +152,7 @@ public class Config {
 	
 	public float getFloat(String key) {
 		try {
-			return Float.valueOf(data.get(key).getFirst());
+			return Float.valueOf(getString(key));
 		} catch(Exception e) {
 			return 0;
 		}
@@ -143,7 +160,7 @@ public class Config {
 	
 	public double getDouble(String key) {
 		try {
-			return Double.valueOf(data.get(key).getFirst());
+			return Double.valueOf(getString(key));
 		} catch(Exception e) {
 			return 0;
 		}
@@ -151,7 +168,7 @@ public class Config {
 	
 	public boolean getBoolean(String key) {
 		try {
-			return Boolean.valueOf(data.get(key).getFirst());
+			return Boolean.valueOf(getString(key));
 		} catch(Exception e) {
 			return false;
 		}
@@ -159,7 +176,7 @@ public class Config {
 	
 	public String getString(String key) {
 		try {
-			String val = data.get(key).getFirst();
+			String val = data.get(section + key).getFirst();
 			return (val == null) ? "" : val;
 		} catch(Exception e) {
 			return "";
@@ -168,7 +185,7 @@ public class Config {
 	
 	public String getComment(String key) {
 		try {
-			String val = data.get(key).getSecond();
+			String val = data.get(section + key).getSecond();
 			return (val == null) ? "" : val;
 		} catch(Exception e) {
 			return "";

@@ -21,6 +21,8 @@ public class EventManager {
 	private EventManager() {}
 
 	public static void init() {
+		BotMC.logToFile("[EventManager] ============================== init() ==============================");
+		
 		map = new HashMap();
 		triggerEvents = true;
 		
@@ -105,8 +107,7 @@ public class EventManager {
 		l.add(new Pair(listener, m));
 		BotMC.logToFile("[EventManager] Successfully registered '"
 				+ afterLastDot(listener.getClass().getName()) + "."
-				+ m.getName() + "(" + afterLastDot(params[0].getName())
-				+ ")'");
+				+ m.getName() + "(" + afterLastDot(params[0].getName()) + ")'");
 		return true;
 	}
 

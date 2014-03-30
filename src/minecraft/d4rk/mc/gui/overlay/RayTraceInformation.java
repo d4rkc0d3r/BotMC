@@ -50,35 +50,38 @@ public class RayTraceInformation extends BasicGuiOverlay implements EventListene
 	}
 	
 	public void onLoadConfig(LoadConfigEvent event) {
-		Config cfg = event.config;
-		cfg.setDefault("RayTraceInformation.isVisible", false);
+		Config cfg = event.config.startSection("RayTraceInformation");
 		
-		cfg.setDefault("RayTraceInformation.displayBlockName", true);
-		cfg.setDefault("RayTraceInformation.displayBlockNamedID", true);
-		cfg.setDefault("RayTraceInformation.displayBlockMetadata", true);
-		cfg.setDefault("RayTraceInformation.displayBlockPosition", true);
-		cfg.setDefault("RayTraceInformation.displayBlockSubInfo", true);
+		cfg.setDefault("isVisible", false);
 		
-		cfg.setDefault("RayTraceInformation.displayEntityName", true);
-		cfg.setDefault("RayTraceInformation.displayEntityHealth", true);
-		cfg.setDefault("RayTraceInformation.displayEntityArmor", true);
-		cfg.setDefault("RayTraceInformation.displayEntityIsInLove", true);
-		cfg.setDefault("RayTraceInformation.displayEntitySubInfo", true);
+		cfg.setDefault("displayBlockName", true);
+		cfg.setDefault("displayBlockNamedID", true);
+		cfg.setDefault("displayBlockMetadata", true);
+		cfg.setDefault("displayBlockPosition", true);
+		cfg.setDefault("displayBlockSubInfo", true);
+		
+		cfg.setDefault("displayEntityName", true);
+		cfg.setDefault("displayEntityHealth", true);
+		cfg.setDefault("displayEntityArmor", true);
+		cfg.setDefault("displayEntityIsInLove", true);
+		cfg.setDefault("displayEntitySubInfo", true);
 		
 		
-		setVisible(cfg.getBoolean("RayTraceInformation.isVisible"));
+		setVisible(cfg.getBoolean("isVisible"));
 		
-		displayBlockName = cfg.getBoolean("RayTraceInformation.displayBlockName");
-		displayBlockNamedID = cfg.getBoolean("RayTraceInformation.displayBlockNamedID");
-		displayBlockMetadata = cfg.getBoolean("RayTraceInformation.displayBlockMetadata");
-		displayBlockPosition = cfg.getBoolean("RayTraceInformation.displayBlockPosition");
-		displayBlockSubInfo = cfg.getBoolean("RayTraceInformation.displayBlockSubInfo");
+		displayBlockName     = cfg.getBoolean("displayBlockName");
+		displayBlockNamedID  = cfg.getBoolean("displayBlockNamedID");
+		displayBlockMetadata = cfg.getBoolean("displayBlockMetadata");
+		displayBlockPosition = cfg.getBoolean("displayBlockPosition");
+		displayBlockSubInfo  = cfg.getBoolean("displayBlockSubInfo");
 		
-		displayEntityName = cfg.getBoolean("RayTraceInformation.displayEntityName");
-		displayEntityHealth = cfg.getBoolean("RayTraceInformation.displayEntityHealth");
-		displayEntityArmor = cfg.getBoolean("RayTraceInformation.displayEntityArmor");
-		displayEntityIsInLove = cfg.getBoolean("RayTraceInformation.displayEntityIsInLove");
-		displayEntitySubInfo = cfg.getBoolean("RayTraceInformation.displayEntitySubInfo");
+		displayEntityName     = cfg.getBoolean("displayEntityName");
+		displayEntityHealth   = cfg.getBoolean("displayEntityHealth");
+		displayEntityArmor    = cfg.getBoolean("displayEntityArmor");
+		displayEntityIsInLove = cfg.getBoolean("displayEntityIsInLove");
+		displayEntitySubInfo  = cfg.getBoolean("displayEntitySubInfo");
+		
+		cfg.endSection();
 	}
 	
 	public void onTick(TickEvent event) {
