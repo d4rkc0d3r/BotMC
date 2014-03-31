@@ -11,8 +11,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 
-import org.lwjgl.input.Keyboard;
-
 import d4rk.mc.ChatColor;
 import d4rk.mc.Config;
 import d4rk.mc.Permission;

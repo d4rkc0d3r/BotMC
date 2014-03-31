@@ -27,6 +27,7 @@ public class BotMC implements EventListener {
 		
 		// ensure, that there is an instance of the OverlayManager so that the config reload will take effect.
 		OverlayManager.getInstance();
+		ClientHacks.getInstance();
 		
 		cfg = new ConfigManager(getBotMCDir() + "/config.cfg");
 		
