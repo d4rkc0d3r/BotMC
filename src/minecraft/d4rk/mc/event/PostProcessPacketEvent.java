@@ -3,7 +3,6 @@ package d4rk.mc.event;
 import net.minecraft.network.Packet;
 
 public class PostProcessPacketEvent extends BaseEvent {
-
 	private final Packet packet;
 	private final boolean isAsync;
 	
@@ -18,5 +17,10 @@ public class PostProcessPacketEvent extends BaseEvent {
 	
 	public boolean isAsync() {
 		return isAsync;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + "(" + packet.getClass().getSimpleName() + ")";
 	}
 }

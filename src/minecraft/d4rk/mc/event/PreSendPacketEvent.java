@@ -12,4 +12,9 @@ public class PreSendPacketEvent extends DisableEvent {
 	public Packet getPacket() {
 		return packet;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + "(" + packet.getClass().getSimpleName() + ")";
+	}
 }

@@ -14,7 +14,7 @@ public class Pair<A, B> {
     	int hashFirst = first != null ? first.hashCode() : 0;
     	int hashSecond = second != null ? second.hashCode() : 0;
 
-    	return (hashFirst + hashSecond) * hashSecond + hashFirst;
+    	return hashFirst ^ hashSecond;
     }
 
     public boolean equals(Object other) {

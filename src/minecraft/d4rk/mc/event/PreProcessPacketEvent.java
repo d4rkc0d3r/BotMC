@@ -18,4 +18,9 @@ public class PreProcessPacketEvent extends DisableEvent {
 	public boolean isAsync() {
 		return isAsync;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + "(" + packet.getClass().getSimpleName() + ")";
+	}
 }

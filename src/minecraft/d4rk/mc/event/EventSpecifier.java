@@ -3,6 +3,7 @@ package d4rk.mc.event;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import d4rk.mc.BotMC;
 import d4rk.mc.ChatColor;
 import d4rk.mc.PlayerString;
 import net.minecraft.network.play.client.C01PacketChatMessage;
@@ -21,7 +22,7 @@ public class EventSpecifier implements EventListener {
 				event.setDisabled(true);
 			} else if(e.isModified()) {
 				event.setDisabled(true);
-				EventManager.sendPacketWithoutEvent(e.getPacket());
+				BotMC.sendPacketNoEvent(e.getPacket());
 			}
 		}
 	}

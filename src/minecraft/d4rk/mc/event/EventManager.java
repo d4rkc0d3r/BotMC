@@ -4,7 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Packet;
@@ -36,13 +39,6 @@ public class EventManager {
 		registerEvents(new KeySim());
 		registerEvents(BotMC.getInstance());
 	}
-	
-	public static void sendPacketWithoutEvent(Packet packet) {
-		boolean tmp = triggerEvents;
-		triggerEvents = false;
-		Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(packet);
-		triggerEvents = tmp;
-	}
 
 	/**
 	 * Call this method to fire an event. All of its listeners are called.
@@ -54,15 +50,21 @@ public class EventManager {
 	public static boolean fireEvent(BaseEvent event) {
 		if(!triggerEvents)
 			return false;
-		List<Pair<EventListener, Method>> l = map.get(event.getClass());
-		if (l == null && event instanceof DisableEvent)
+		Set<Pair<EventListener, Method>> set = map.get(event.getClass());
+		if (set == null && event instanceof DisableEvent)
 			return ((DisableEvent) event).isDisabled();
-		if (l == null)
+		if (set == null)
 			return false;
-		for (int i = 0; i < l.size(); ++i) {
-			Pair<EventListener, Method> p = l.get(i);
+		List<Pair<EventListener, Method>> toRemove = new ArrayList();
+		Pair<EventListener, Method>[] array =  set.toArray(new Pair[0]);
+		for (int i = 0; i < array.length; i++) {
+			Pair<EventListener, Method> p = array[i];
 			if(p.getFirst().isDestroyed()) {
-				l.remove(i--);
+				Class<?>[] params = p.getSecond().getParameterTypes();
+				BotMC.logToFile("[EventManager] Successfully deregistered '"
+						+ afterLastDot(p.getFirst().getClass().getName()) + "."
+						+ p.getSecond().getName() + "(" + afterLastDot(params[0].getName()) + ")'");
+				toRemove.add(p);
 				continue;
 			}
 			try {
@@ -74,6 +76,10 @@ public class EventManager {
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
+		}
+		set.removeAll(toRemove);
+		if(set.isEmpty()) {
+			map.remove(event.getClass());
 		}
 		if (event instanceof DisableEvent)
 			return ((DisableEvent) event).isDisabled();
@@ -101,12 +107,12 @@ public class EventManager {
 			return false;
 		}
 	
-		List l = map.get(params[0]);
-		if (l == null) {
-			l = new ArrayList<Pair<EventListener, Method>>();
-			map.put(params[0], l);
+		Set set = map.get(params[0]);
+		if (set == null) {
+			set = new HashSet<Pair<EventListener, Method>>();
+			map.put(params[0], set);
 		}
-		l.add(new Pair(listener, m));
+		set.add(new Pair(listener, m));
 		BotMC.logToFile("[EventManager] Successfully registered '"
 				+ afterLastDot(listener.getClass().getName()) + "."
 				+ m.getName() + "(" + afterLastDot(params[0].getName()) + ")'");
@@ -127,6 +133,6 @@ public class EventManager {
 		return str.substring(str.lastIndexOf('.') + 1);
 	}
 
-	private static HashMap<Class, List<Pair<EventListener, Method>>> map = new HashMap();
+	private static HashMap<Class, Set<Pair<EventListener, Method>>> map = new HashMap();
 	public static boolean triggerEvents = true;
 }

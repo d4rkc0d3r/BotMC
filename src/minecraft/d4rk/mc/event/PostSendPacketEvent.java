@@ -12,4 +12,9 @@ public class PostSendPacketEvent extends BaseEvent {
 	public Packet getPacket() {
 		return packet;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + "(" + packet.getClass().getSimpleName() + ")";
+	}
 }

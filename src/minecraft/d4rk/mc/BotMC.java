@@ -7,23 +7,38 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
+import d4rk.mc.bot.PlayerHelper;
+import d4rk.mc.bot.SimpleTestBot;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.EventManager;
+import d4rk.mc.event.PostSendPacketEvent;
+import d4rk.mc.event.TickEvent;
 import d4rk.mc.gui.OverlayManager;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.client.C0EPacketClickWindow;
 import net.minecraft.util.ChatComponentText;
 
 public class BotMC implements EventListener {
 	public static Minecraft mc = Minecraft.getMinecraft();
 	public static Config cfg;
+	public static PlayerHelper player;
 	
 	public BotMC() {
 		instance = this;
 		(new File(getBotMCDir() + "/log/" + getPlayerName())).mkdirs();
 		Permission.init();
 		EventManager.init();
+		
+		new SimpleTestBot();
 		
 		// ensure, that there is an instance of the OverlayManager so that the config reload will take effect.
 		OverlayManager.getInstance();
@@ -33,6 +48,53 @@ public class BotMC implements EventListener {
 		
 		cfg.reload();
 	}
+	
+	public void onTick(TickEvent event) {
+		if(player == null && mc.thePlayer != null) {
+			player = new PlayerHelper(mc.thePlayer, mc.playerController);
+		}
+	}
+	
+	public void onWindowClick(PostSendPacketEvent event) {
+		if(!(event.getPacket() instanceof C0EPacketClickWindow)) {
+			return;
+		}
+		
+		C0EPacketClickWindow packet = (C0EPacketClickWindow) event.getPacket();
+		if(event.getPacket() != null) return;
+		
+		log("clicked slot " + packet.func_149544_d() + " with " + packet.func_149546_g());
+		
+		ItemStack item = packet.func_149546_g();
+		if(item != null) {
+			for(IRecipe recipe : player.getRecipesFor(item)) {
+				List<ItemStack> items = null;
+				if(recipe instanceof ShapedRecipes) {
+					items = ((ShapedRecipes)recipe).getRecipeInput();
+				}
+				if(recipe instanceof ShapelessRecipes) {
+					items = ((ShapelessRecipes)recipe).getRecipeInput();
+				}
+				log("craft " + recipe.getRecipeOutput() + " with " + format(items));
+			}
+		}
+	}
+	
+	static public String format(List<ItemStack> items) {
+		if(items == null) {
+			return "null";
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("{ ");
+		for(int i = 0; i < items.size(); i++) {
+			sb.append(""+items.get(i));
+			if(i < items.size() - 1) {
+				sb.append(", ");
+			}
+		}
+		sb.append(" }");
+		return sb.toString();
+	}
 
 	static public String getBotMCDir() {
 		return getMCDir() + "/botmc";
@@ -40,6 +102,14 @@ public class BotMC implements EventListener {
 	
 	static public String getMCDir() {
 		return mc.mcDataDir.getPath();
+	}
+	
+	static public void sendPacket(Packet p) {
+		mc.getNetHandler().addToSendQueue(p);
+	}
+	
+	static public void sendPacketNoEvent(Packet p) {
+		mc.getNetHandler().addToSendQueueNoEvent(p);
 	}
 	
 	static public String getCurrentDateAndTime() {

@@ -755,6 +755,11 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new GuiMainMenu()), "disconnect.lost", p_147231_1_));
         }
     }
+    
+    public void addToSendQueueNoEvent(Packet p)
+    {
+    	this.netManager.scheduleOutboundPacket(p, new GenericFutureListener[0]);
+    }
 
     public void addToSendQueue(Packet p_147297_1_)
     {

@@ -5,5 +5,8 @@ package d4rk.mc.event;
  * {@link EventManager} will fail to bind the events correctly.
  */
 public abstract class BaseEvent {
-	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
+	}
 }
