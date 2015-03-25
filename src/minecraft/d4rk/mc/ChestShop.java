@@ -1,7 +1,7 @@
 package d4rk.mc;
 
 public class ChestShop extends Shop {
-	public static ChestShop parse(BlockWrapper block) {
+	public static Shop parse(BlockWrapper block) {
 		if (!block.isSign()
 				|| block.getSignLine(0).isEmpty()
 				|| block.getSignLine(1).isEmpty()
@@ -10,7 +10,7 @@ public class ChestShop extends Shop {
 				|| !(block.getSignLine(2).contains("S") || block.getSignLine(2).contains("B")))
 			return null;
 		
-		ChestShop shop = new ChestShop();
+		Shop shop = new ChestShop();
 		shop.block = block;
 		shop.userName = block.getSignLine(0);
 		try {

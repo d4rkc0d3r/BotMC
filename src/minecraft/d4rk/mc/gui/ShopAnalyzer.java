@@ -16,11 +16,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.server.S33PacketUpdateSign;
-
 import d4rk.mc.BlockWrapper;
 import d4rk.mc.ChatColor;
 import d4rk.mc.ChestShop;
 import d4rk.mc.Config;
+import d4rk.mc.EssentialsShop;
 import d4rk.mc.Permission;
 import d4rk.mc.PlayerString;
 import d4rk.mc.Shop;
@@ -342,6 +342,11 @@ public class ShopAnalyzer extends BasicGuiScreen implements EventListener {
 		S33PacketUpdateSign p = (S33PacketUpdateSign) event.getPacket();
 		BlockWrapper block = new BlockWrapper(p.func_149346_c(), p.func_149345_d(), p.func_149344_e());
 		Shop shop = ChestShop.parse(block);
+		if(shop != null) {
+			shopSet.add(shop);
+			return;
+		}
+		shop = EssentialsShop.parse(block);
 		if(shop != null) {
 			shopSet.add(shop);
 		}
