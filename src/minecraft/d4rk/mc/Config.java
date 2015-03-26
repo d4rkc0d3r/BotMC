@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import d4rk.mc.event.EventManager;
@@ -114,6 +115,10 @@ public class Config {
 				file.close();
 			} catch(Exception e) {}
 		}
+	}
+	
+	public Set<String> getKeys() {
+		return data.keySet();
 	}
 	
 	public void set(String key, Object value) {

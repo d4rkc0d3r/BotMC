@@ -16,6 +16,7 @@ import d4rk.mc.KeySim;
 import d4rk.mc.chat.ChatRegexIgnore;
 import d4rk.mc.chat.LocaleGlobalPrivateMessageLogger;
 import d4rk.mc.chat.PMIgnore;
+import d4rk.mc.gui.ConfigGuiManager;
 import d4rk.mc.gui.ItemNameIdFinder;
 import d4rk.mc.gui.ShopAnalyzer;
 import d4rk.mc.util.Pair;
@@ -33,6 +34,7 @@ public class EventManager {
 		registerEvents(new EventSpecifier());
 		registerEvents(new ShopAnalyzer());
 		registerEvents(new ItemNameIdFinder());
+		registerEvents(new ConfigGuiManager());
 		registerEvents(new LocaleGlobalPrivateMessageLogger());
 		registerEvents(new ChatRegexIgnore());
 		registerEvents(new KeySim());
