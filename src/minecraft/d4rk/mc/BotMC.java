@@ -38,7 +38,7 @@ public class BotMC implements EventListener {
 		Permission.init();
 		EventManager.init();
 		
-		//new SimpleTestBot();
+		new SimpleTestBot();
 		
 		// ensure, that there is an instance of the OverlayManager so that the config reload will take effect.
 		OverlayManager.getInstance();
