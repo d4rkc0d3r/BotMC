@@ -21,6 +21,7 @@ import d4rk.mc.event.EventManager;
 import d4rk.mc.event.LoadConfigEvent;
 import d4rk.mc.event.PreSendPacketEvent;
 import d4rk.mc.gui.overlay.EntityChunkCount;
+import d4rk.mc.gui.overlay.NearestMobInformation;
 import d4rk.mc.gui.overlay.OreLevelIndicator;
 import d4rk.mc.gui.overlay.RayTraceInformation;
 
@@ -38,6 +39,7 @@ public class OverlayManager extends BasicGuiScreen implements EventListener {
 		mc = Minecraft.getMinecraft();
 		EventManager.registerEvents(this);
 		overlays[RIGHT_BOTTOM].add(new OreLevelIndicator());
+		overlays[LEFT_TOP].add(new NearestMobInformation());
 		overlays[LEFT_TOP].add(new RayTraceInformation());
 		overlays[RIGHT_TOP].add(new EntityChunkCount());
 	}
