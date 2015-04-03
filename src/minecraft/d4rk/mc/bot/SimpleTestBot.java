@@ -9,6 +9,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.MathHelper;
+import d4rk.mc.BlockMarker;
+import d4rk.mc.BlockWrapper;
 import d4rk.mc.BotMC;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.EventManager;
@@ -32,7 +35,7 @@ public class SimpleTestBot implements EventListener {
 			Vec3D playerPos = Vec3D.getPlayerFootPos(mc.thePlayer);
 			List<Entity> entities = mc.theWorld.loadedEntityList;
 			
-			Entity nearest = null;
+			EntityLiving nearest = null;
 			double dist = Double.MAX_VALUE;
 			
 			for(Entity e : entities) {
@@ -45,19 +48,41 @@ public class SimpleTestBot implements EventListener {
 				Vec3D pos = new Vec3D(e);
 				double d = pos.dist(playerPos);
 				if(d < dist && d <= 25) {
-					nearest = e;
+					nearest = (EntityLiving)e;
 					dist = d;
 				}
 			}
 			
 			if(nearest != null) {
-				Vec3D dir = new Vec3D(nearest).sub(playerPos).setLen(1);
-				Vec2D d = new Vec2D(dir.x, dir.z);
-				double a = 180 / Math.PI * d.angle(new Vec2D(0, 1));
-				if(d.x > 0) {
-					a =  -a;
+				//BotMC.player.aimAtWithBow(nearest);
+			}
+			
+			Vec3D pos = new Vec3D(mc.thePlayer);
+			Vec3D speed = new Vec3D();
+
+			float PI = (float)Math.PI;
+			
+	        speed.x = (-MathHelper.sin(mc.thePlayer.rotationYaw / 180.0F * PI) * MathHelper.cos(mc.thePlayer.rotationPitch / 180.0F * PI));
+	        speed.z = (MathHelper.cos(mc.thePlayer.rotationYaw / 180.0F * PI) * MathHelper.cos(mc.thePlayer.rotationPitch / 180.0F * PI));
+	        speed.y = (-MathHelper.sin(mc.thePlayer.rotationPitch / 180.0F * PI));
+			
+	        speed.mul(3); // fully drawn bow
+	        
+	        outside:
+	        
+			for(int i = 0; i < 255; i++) {
+				final int sampleSize = 16;
+				for(int j = 0; j < sampleSize; j++) {
+					BlockWrapper block = new BlockWrapper(pos.clone().add(speed.clone().mul(j / (double)sampleSize)));
+					if(!block.isAir()) {
+						BlockMarker.markBlockAs(block, Blocks.wool, 14, 3);
+						break outside;
+					}
 				}
-				BotMC.player.player.rotationYaw = (float)a;
+				
+				pos.add(speed);
+				speed.mul(0.99);
+				speed.y -= 0.05;
 			}
 		}
 		

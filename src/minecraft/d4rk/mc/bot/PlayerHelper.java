@@ -5,14 +5,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import d4rk.mc.BotMC;
 import d4rk.mc.event.EventListener;
 import d4rk.mc.event.EventManager;
 import d4rk.mc.event.TickEvent;
 import d4rk.mc.util.Pair;
-
+import d4rk.mc.util.Vec2D;
+import d4rk.mc.util.Vec3D;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.PlayerControllerMP;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -143,6 +147,27 @@ public class PlayerHelper implements EventListener {
 			}
 		}
 		return false;
+	}
+	
+	public void aimAtWithBow(EntityLiving target) {
+		EntityArrow arrow = new EntityArrow(player.worldObj, player, target, 2F, 0F);
+		player.rotationPitch = -arrow.rotationPitch;
+		player.rotationYaw = -arrow.rotationYaw;
+	}
+	
+	public void lookAt(Vec3D target) {
+		Vec3D dir = target.clone().sub(new Vec3D(player)).setLen(1);
+		Vec2D d = new Vec2D(dir.x, dir.z);
+		double a = 180 / Math.PI * d.angle(new Vec2D(0, 1));
+		if(d.x > 0) {
+			a = -a;
+		}
+		player.rotationYaw = (float)a;
+		a = 180 / Math.PI * dir.angle(new Vec3D(dir.x, 0, dir.z));
+		if(dir.y > 0) {
+			a = -a;
+		}
+		player.rotationPitch = (float)a;
 	}
 	
 	public void destroy() {
