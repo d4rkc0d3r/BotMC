@@ -11,6 +11,7 @@ import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.Packet;
+import d4rk.mc.BlockMarker;
 import d4rk.mc.BotMC;
 import d4rk.mc.KeySim;
 import d4rk.mc.chat.ChatRegexIgnore;
@@ -32,6 +33,7 @@ public class EventManager {
 		
 		registerEvents(new PMIgnore());
 		registerEvents(new EventSpecifier());
+		registerEvents(new BlockMarker());
 		registerEvents(new ShopAnalyzer());
 		registerEvents(new ItemNameIdFinder());
 		registerEvents(new ConfigGuiManager());

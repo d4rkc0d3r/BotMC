@@ -53,6 +53,9 @@ public class BotMC implements EventListener {
 		if(player == null && mc.thePlayer != null) {
 			player = new PlayerHelper(mc.thePlayer, mc.playerController);
 		}
+		if(player != null && player.player != mc.thePlayer) {
+			player.player = mc.thePlayer;
+		}
 	}
 	
 	public void onWindowClick(PostSendPacketEvent event) {
